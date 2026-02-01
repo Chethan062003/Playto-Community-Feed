@@ -16,11 +16,11 @@ class FeedView(APIView):
         return Response(PostSerializer(posts, many=True).data)
 
     def post(self, request):
-        serializer = PostSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=400)
+    serializer = PostSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save(author=None)   # 🔥 THIS FIX
+        return Response(serializer.data)
+    return Response(serializer.errors, status=400)
 
     def delete(self, request):
         post_id = request.data.get("id")
