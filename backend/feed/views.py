@@ -16,10 +16,10 @@ class FeedView(APIView):
         return Response(PostSerializer(posts, many=True).data)
 
     def post(self, request):
-        serializer = PostCreateSerializer(data=request.data)  # ✅ use create serializer
+        serializer = PostCreateSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
+            Post.objects.create(content=serializer.validated_data['content'])
+            return Response({"status": "created"})
         return Response(serializer.errors, status=400)
 
     def delete(self, request):
