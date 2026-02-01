@@ -6,7 +6,7 @@ from django.utils.timezone import now, timedelta
 from django.db.models import Sum, Case, When, IntegerField, F
 
 from .models import Post, Comment, Like
-from .serializers import PostSerializer
+from .serializers import PostSerializer, PostCreateSerializer
 
 
 class FeedView(APIView):
@@ -16,9 +16,9 @@ class FeedView(APIView):
         return Response(PostSerializer(posts, many=True).data)
 
     def post(self, request):
-        serializer = PostSerializer(data=request.data)
+        serializer = PostCreateSerializer(data=request.data)  # ✅ use create serializer
         if serializer.is_valid():
-            serializer.save()   # ✅ DO NOT pass author here
+            serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=400)
 
