@@ -1,4 +1,3 @@
-
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
@@ -9,6 +8,7 @@ from django.db.models import Sum, Case, When, IntegerField, F
 from .models import Post, Comment, Like
 from .serializers import PostSerializer
 
+
 class FeedView(APIView):
 
     def get(self, request):
@@ -16,11 +16,13 @@ class FeedView(APIView):
         return Response(PostSerializer(posts, many=True).data)
 
     def post(self, request):
-    serializer = PostSerializer(data=request.data)
-    if serializer.is_valid():
-        serializer.save(author=None)   # 🔥 THIS FIX
-        return Response(serializer.data)
-    return Response(serializer.errors, status=400)
+        serializer = PostSerializer(data=request.data)
+
+        if serializer.is_valid():
+            serializer.save(author=None)   # 🔥 important fix
+            return Response(serializer.data)
+
+        return Response(serializer.errors, status=400)
 
     def delete(self, request):
         post_id = request.data.get("id")
@@ -28,7 +30,9 @@ class FeedView(APIView):
         post.delete()
         return Response({"deleted": post_id})
 
+
 class LikePostView(APIView):
+
     def post(self, request, post_id):
         post = get_object_or_404(Post, id=post_id)
         try:
@@ -37,7 +41,9 @@ class LikePostView(APIView):
             pass
         return Response({"status": "ok"})
 
+
 class LikeCommentView(APIView):
+
     def post(self, request, comment_id):
         comment = get_object_or_404(Comment, id=comment_id)
         try:
@@ -46,7 +52,9 @@ class LikeCommentView(APIView):
             pass
         return Response({"status": "ok"})
 
+
 class LeaderboardView(APIView):
+
     def get(self, request):
         since = now() - timedelta(hours=24)
         likes = Like.objects.filter(created_at__gte=since)
