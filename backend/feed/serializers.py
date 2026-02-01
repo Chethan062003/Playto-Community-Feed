@@ -1,6 +1,6 @@
-
 from rest_framework import serializers
 from .models import Post, Comment
+
 
 class CommentSerializer(serializers.ModelSerializer):
     replies = serializers.SerializerMethodField()
@@ -14,6 +14,7 @@ class CommentSerializer(serializers.ModelSerializer):
         children = self.context['comment_map'].get(obj.id, [])
         return CommentSerializer(children, many=True, context=self.context).data
 
+
 class PostSerializer(serializers.ModelSerializer):
     comments = serializers.SerializerMethodField()
     like_count = serializers.IntegerField(source='likes.count', read_only=True)
@@ -22,8 +23,15 @@ class PostSerializer(serializers.ModelSerializer):
         model = Post
         fields = ['id', 'content', 'like_count', 'comments']
 
+    # 🔥 THIS FIX IS IMPORTANT FOR POST
+    def create(self, validated_data):
+        return Post.objects.create(
+            content=validated_data['content'],
+            author=None
+        )
+
     def get_comments(self, obj):
-        all_comments = obj.comments.select_related('author').all()
+        all_comments = obj.comments.all()
 
         comment_map = {}
         roots = []
