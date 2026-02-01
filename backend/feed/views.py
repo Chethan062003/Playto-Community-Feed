@@ -17,11 +17,9 @@ class FeedView(APIView):
 
     def post(self, request):
         serializer = PostSerializer(data=request.data)
-
         if serializer.is_valid():
-            serializer.save(author=None)   # 🔥 important fix
+            serializer.save(author=None)
             return Response(serializer.data)
-
         return Response(serializer.errors, status=400)
 
     def delete(self, request):
@@ -32,7 +30,6 @@ class FeedView(APIView):
 
 
 class LikePostView(APIView):
-
     def post(self, request, post_id):
         post = get_object_or_404(Post, id=post_id)
         try:
@@ -43,7 +40,6 @@ class LikePostView(APIView):
 
 
 class LikeCommentView(APIView):
-
     def post(self, request, comment_id):
         comment = get_object_or_404(Comment, id=comment_id)
         try:
@@ -54,7 +50,6 @@ class LikeCommentView(APIView):
 
 
 class LeaderboardView(APIView):
-
     def get(self, request):
         since = now() - timedelta(hours=24)
         likes = Like.objects.filter(created_at__gte=since)
