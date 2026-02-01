@@ -31,9 +31,20 @@ cd backend
 source venv/bin/activate
 python3 manage.py runserver
 
-tarting development server at http://127.0.0.1:8000/
+starting development server at http://127.0.0.1:8000/
 
 
 http://localhost:8000/admin/
 
-for the admin panel 
+for the admin panel
+
+
+for the front end in another terminal
+
+cd frontend
+
+npm install
+
+npm start
+
+Local: http://localhost:3000
