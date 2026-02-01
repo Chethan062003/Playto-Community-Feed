@@ -4,7 +4,7 @@ export default function Leaderboard() {
   const [leaders, setLeaders] = useState([]);
 
   useEffect(() => {
-    fetch("https://playto-community-feed-12gt.onrender.com/api/leaderboard/")
+    fetch("https://playto-community-feed-pdo8.onrender.com/api/leaderboard/")
       .then(res => res.json())
       .then(data => setLeaders(data));
   }, []);
