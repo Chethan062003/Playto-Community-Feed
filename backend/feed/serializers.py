@@ -3,11 +3,8 @@ from .models import Post, Comment
 
 
 # 🔹 Serializer used ONLY for creating posts
-class PostCreateSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Post
-        fields = ['content']
-
+class PostCreateSerializer(serializers.Serializer):
+    content = serializers.CharField()
 
 # 🔹 Comment serializer for nested tree
 class CommentSerializer(serializers.ModelSerializer):
