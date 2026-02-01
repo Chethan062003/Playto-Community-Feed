@@ -10,9 +10,17 @@ from .models import Post, Comment, Like
 from .serializers import PostSerializer
 
 class FeedView(APIView):
+
     def get(self, request):
         posts = Post.objects.prefetch_related('comments__likes', 'likes')
         return Response(PostSerializer(posts, many=True).data)
+
+    def post(self, request):
+        serializer = PostSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=201)
+        return Response(serializer.errors, status=400)
 
 class LikePostView(APIView):
     def post(self, request, post_id):
