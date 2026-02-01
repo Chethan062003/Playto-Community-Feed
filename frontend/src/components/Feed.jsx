@@ -5,7 +5,7 @@ export default function Feed() {
   const [posts, setPosts] = useState([]);
 
   useEffect(() => {
-    fetch("http://127.0.0.1:8000/api/feed/")
+    fetch("https://playto-community-feed-12gt.onrender.com/api/feed/")
       .then(res => res.json())
       .then(data => setPosts(data));
   }, []);
