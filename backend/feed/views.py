@@ -16,11 +16,12 @@ class FeedView(APIView):
         return Response(PostSerializer(posts, many=True).data)
 
     def post(self, request):
-        serializer = PostSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=201)
-        return Response(serializer.errors, status=400)
+        content = request.data.get("content")
+        if not content:
+            return Response({"error": "Content required"}, status=400)
+
+        post = Post.objects.create(content=content, author=request.user)
+        return Response(PostSerializer(post).data, status=201)
 
 class LikePostView(APIView):
     def post(self, request, post_id):
