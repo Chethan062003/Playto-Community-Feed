@@ -2,6 +2,14 @@ from rest_framework import serializers
 from .models import Post, Comment
 
 
+# 🔹 Serializer used ONLY for creating posts
+class PostCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Post
+        fields = ['content']
+
+
+# 🔹 Comment serializer for nested tree
 class CommentSerializer(serializers.ModelSerializer):
     replies = serializers.SerializerMethodField()
     like_count = serializers.IntegerField(source='likes.count', read_only=True)
@@ -15,6 +23,7 @@ class CommentSerializer(serializers.ModelSerializer):
         return CommentSerializer(children, many=True, context=self.context).data
 
 
+# 🔹 Serializer used for displaying feed
 class PostSerializer(serializers.ModelSerializer):
     comments = serializers.SerializerMethodField()
     like_count = serializers.IntegerField(source='likes.count', read_only=True)
@@ -22,13 +31,6 @@ class PostSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
         fields = ['id', 'content', 'like_count', 'comments']
-
-    # 🔥 THIS FIX IS IMPORTANT FOR POST
-    def create(self, validated_data):
-        return Post.objects.create(
-            content=validated_data['content'],
-            author=None
-        )
 
     def get_comments(self, obj):
         all_comments = obj.comments.all()
