@@ -18,7 +18,7 @@ class FeedView(APIView):
     def post(self, request):
         serializer = PostSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save(author=None)
+            serializer.save()   # ✅ DO NOT pass author here
             return Response(serializer.data)
         return Response(serializer.errors, status=400)
 
