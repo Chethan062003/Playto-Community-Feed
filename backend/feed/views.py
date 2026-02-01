@@ -18,7 +18,7 @@ class FeedView(APIView):
     def post(self, request):
         serializer = PostSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save(author=request.user)
+            serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=400)
 
@@ -26,7 +26,7 @@ class FeedView(APIView):
         post_id = request.data.get("id")
         post = get_object_or_404(Post, id=post_id)
         post.delete()
-        return Response({"deleted": True})
+        return Response({"deleted": post_id})
 
 class LikePostView(APIView):
     def post(self, request, post_id):
